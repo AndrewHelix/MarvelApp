@@ -21,7 +21,7 @@ class RandomChar extends Component {
 
   componentDidMount() {
     this.updateChar();
-    //this.timerId = setInterval(this.updateChar, 3000);
+    this.timerId = setInterval(this.updateChar, 3000);
   }
 
   componentWillUnmount() {
@@ -54,11 +54,16 @@ class RandomChar extends Component {
     })
   }
 
+  onTryRandomChar = () => {
+    clearInterval(this.timerId)
+    this.updateChar()
+  }
+
   render() {
     const { char, loading, error } = this.state;
     const errorMessage = error ? <ErrorMessage /> : null;
     const spinner = loading ? <Spinner /> : null;
-    const content = !(loading || error) ? <View char={char} /> : null;
+    const content = !(loading || error) ? <View char={char}/> : null;
 
     return (
       <div className="randomchar">
@@ -72,7 +77,7 @@ class RandomChar extends Component {
             Do you want to get to know him better?
           </p>
           <p className="randomchar__title">Or choose another one</p>
-          <button className="button button__main" onClick={this.updateChar}>
+          <button className="button button__main" onClick={this.onTryRandomChar}>
             <div className="inner">try it</div>
           </button>
           <img src={mjolnir} alt="mjolnir" className="randomchar__decoration" />

@@ -34,7 +34,7 @@ class CharList extends Component {
     return(
       <ul className="char__grid">
           {
-              this.state.chars.map(char => <Char char={char} key={char.id}/>)
+              this.state.chars.map(char => <Char char={char} key={char.id} id={char.id} onCharSelected={this.props.onCharSelected}/>)
           }
       </ul>
     )
@@ -60,14 +60,14 @@ class CharList extends Component {
   }
 }
 
-const Char = ({char: { name, thumbnail }}) => {
+const Char = ({char: { name, thumbnail }, id, onCharSelected}) => {
   const objectFitStyle = thumbnail.includes('image_not_available') ? 'contain' : 'unset'
   const imgStyles = {
     objectFit: objectFitStyle
   }
 
   return (
-    <li className="char__item">
+    <li className="char__item" id={id} onClick={() => onCharSelected(id)}>
       <img src={thumbnail} alt={name} style={imgStyles}/>
       <div className="char__name">{name}</div>
     </li>
