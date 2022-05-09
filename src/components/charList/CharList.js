@@ -1,4 +1,5 @@
 import { Component } from "react/cjs/react.development";
+import PropTypes from 'prop-types';
 import MarvelService from "../../services/MarvelService";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
@@ -104,5 +105,9 @@ const Char = ({ char: { name, thumbnail }, id, onCharSelected }) => {
     </li>
   );
 };
+
+CharList.propTypes = {
+  onCharSelected: PropTypes.func.isRequired
+}
 
 export default CharList;
