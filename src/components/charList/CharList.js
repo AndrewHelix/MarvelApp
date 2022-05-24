@@ -1,50 +1,36 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
 import "./charList.scss";
 
 const CharList = (props) => {
   const [chars, setChars] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [newItemLoading, setNewItemLoading] = useState(false);
   const [offset, setOffset] = useState(210);
   const [charEnded, setCharEnded] = useState(false);
  
-  const marvelService = new MarvelService();
+  const {loading, error, getAllCharacters} = useMarvelService();
 
   useEffect(() => {
-    onRequest()
+    onRequest(offset, true)
     // eslint-disable-next-line
   }, [])
   
-  function onRequest(offset) {
-   onCharListLoading();
-    marvelService
-      .getAllCharacters(offset)
-      .then(onCharsLoaded)
-      .catch(onError);
-  }
-
-  function onCharListLoading() {
-    setNewItemLoading(true)
+  function onRequest(offset, initial) {
+    initial ? setNewItemLoading(false) : setNewItemLoading(true);
+    getAllCharacters(offset)
+      .then(onCharsLoaded);
   }
 
   function onCharsLoaded(newChars) {
     const ended = newChars.length < 9;
 
     setChars(chars => [...chars, ...newChars]);
-    setLoading(false);
     setNewItemLoading(false);
     setOffset(offset => offset + 9);
     setCharEnded(ended)
-  };
-
-  function onError() {
-    setError(true);
-    setLoading(false);
   };
 
   function renderChars() {
@@ -63,8 +49,8 @@ const CharList = (props) => {
   }
 
   const errorMessage = error ? <ErrorMessage /> : null;
-  const spinner = loading ? <Spinner /> : null;
-  const content = !(loading || error) ? renderChars(chars) : null;
+  const spinner = loading && !newItemLoading ? <Spinner /> : null;
+  const content = renderChars(chars)
 
   return (
     <div className="char__list">
