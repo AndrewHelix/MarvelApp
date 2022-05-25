@@ -13,7 +13,7 @@ const ComicsList = () => {
   const { loading, error, getAllComics } = useMarvelService();
 
   const errorMessage = error ? <ErrorMessage /> : null;
-  const spinner = loading ? <Spinner /> : null;
+  const spinner = loading && newItemLoading ? <Spinner /> : null;
 
   useEffect(() => {
     onRequest(offset, true);
@@ -35,12 +35,12 @@ const ComicsList = () => {
 
   return (
     <div className="comics__list">
+      {spinner}
       <ul className="comics__grid">
         {errorMessage}
-        {comics.map((el) => (
-          <View comic={el} />
+        {comics.map((el, i) => (
+          <View comic={el} key={i}/>
         ))}
-        {spinner}
       </ul>
       <button
         disabled={newItemLoading}
